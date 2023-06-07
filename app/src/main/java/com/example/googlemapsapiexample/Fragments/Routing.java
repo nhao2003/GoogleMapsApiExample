@@ -31,30 +31,30 @@ import retrofit2.http.Query;
 public class Routing extends Fragment {
 
     private GoogleMap map;
-    private LatLng fkip;
-    private LatLng monas;
+    private LatLng KTX_B;
+    private LatLng UIT;
     final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull @NotNull GoogleMap googleMap) {
             map = googleMap;
 
             MarkerOptions markerFkip = new MarkerOptions()
-                    .position(fkip)
-                    .title("FKIP");
+                    .position(KTX_B)
+                    .title("Ký túc xá Khu B Đại học Quốc gia TP.HCM");
             MarkerOptions markerMonas = new MarkerOptions()
-                    .position(monas)
-                    .title("Monas");
+                    .position(UIT)
+                    .title("Trường Đại học Công nghệ Thông tin - ĐHQG TP.HCM");
 
             map.addMarker(markerFkip);
             map.addMarker(markerMonas);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(monas, 11.6f));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(UIT, 11.6f));
 
-            String fromFKIP = fkip.latitude + "," +     fkip.longitude;
-            String toMonas = monas.latitude + "," + monas.longitude;
+            String fromKTX_B = KTX_B.latitude + "," +     KTX_B.longitude;
+            String toUIT = UIT.latitude + "," + UIT.longitude;
 
             ApiServices apiServices = RetrofitClient.apiServices(requireContext());
-            apiServices.getDirection(fromFKIP, toMonas, "AIzaSyBg8RtAbXyLYcRpQOe2KPwCuNNvW-Rrq70")
-                    .enqueue(new Callback<DirectionResponses>() {//
+            apiServices.getDirection(fromKTX_B, toUIT, "AIzaSyBg8RtAbXyLYcRpQOe2KPwCuNNvW-Rrq70")
+                    .enqueue(new Callback<DirectionResponses>() {
                         @Override
                         public void onResponse(@NonNull Call<DirectionResponses> call, @NonNull Response<DirectionResponses> response) {
                             drawPolyline(response);
@@ -78,8 +78,8 @@ public class Routing extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fkip = new LatLng(-6.3037978, 106.8693713);
-        monas = new LatLng(-6.1890511, 106.8251573);
+        KTX_B = new LatLng(10.8821629,106.782239);
+        UIT = new LatLng(10.87007575745032, 106.80306452005529);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_view);
         if (mapFragment != null) {
