@@ -5,10 +5,11 @@
              android:layout_height="match_parent"
              tools:context=".Fragments.Routing">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.fragment.app.FragmentContainerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Routing"/>
+            android:id="@+id/maps_view"
+            tools:context=".Fragments.MapsFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
 </FrameLayout>
