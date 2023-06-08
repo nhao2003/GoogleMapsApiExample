@@ -47,7 +47,7 @@ public class Routing extends Fragment {
 
             map.addMarker(markerFkip);
             map.addMarker(markerMonas);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(UIT, 11.6f));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(UIT, 100));
 
             String fromKTX_B = KTX_B.latitude + "," +     KTX_B.longitude;
             String toUIT = UIT.latitude + "," + UIT.longitude;
@@ -105,6 +105,7 @@ public class Routing extends Fragment {
                     .width(8f)
                     .color(Color.RED);
             map.addPolyline(polyline);
+            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         }
     }
 
