@@ -18,7 +18,11 @@ import com.example.googlemapsapiexample.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
@@ -28,76 +32,36 @@ import retrofit2.Response;
 import java.util.Objects;
 import java.util.Random;
 
-public class Home extends Fragment {
-
-    int MapType = GoogleMap.MAP_TYPE_NORMAL;
-    private GoogleMap map;
-    private ImageView btnLayer;
-    final OnMapReadyCallback callback = new OnMapReadyCallback() {
-        @Override
-        public void onMapReady(@NonNull @NotNull GoogleMap googleMap) {
-            map = googleMap;
-            map.getUiSettings().setMyLocationButtonEnabled(true);
-            map.getUiSettings().setZoomControlsEnabled(true);
-            map.getUiSettings().setMapToolbarEnabled(true);
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(requireContext(), "Vui lòng bật và cấp quyền vị trí.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            map.setMyLocationEnabled(true);
-        }
-    };
-
-    public Home() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.home_maps_view);
-        if (mapFragment != null) {
-            System.out.println("**********************************************A");
-            mapFragment.getMapAsync(callback);
-        } else {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        }
-        btnLayer = view.findViewById(R.id.btn_layer);
-        btnLayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MapType++;
-                if (MapType >= 5) MapType = 0;
-                switch (MapType) {
-                    case GoogleMap.MAP_TYPE_NONE:
-                        Toast.makeText(requireContext(), "None", Toast.LENGTH_SHORT).show();
-                        map.setMapType(GoogleMap.MAP_TYPE_NONE);
-                        break;
-                    case GoogleMap.MAP_TYPE_NORMAL:
-                        Toast.makeText(requireContext(), "Normal", Toast.LENGTH_SHORT).show();
-                        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        break;
-                    case GoogleMap.MAP_TYPE_HYBRID:
-                        Toast.makeText(requireContext(), "Hybrid", Toast.LENGTH_SHORT).show();
-                        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                        break;
-                    case GoogleMap.MAP_TYPE_SATELLITE:
-                        Toast.makeText(requireContext(), "Satellite", Toast.LENGTH_SHORT).show();
-                        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                        break;
-                    case GoogleMap.MAP_TYPE_TERRAIN:
-                        Toast.makeText(requireContext(), "Terrain", Toast.LENGTH_SHORT).show();
-                        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                        break;
-                }
-            }
-        });
-    }
+public class Home extends Fragment implements
+        OnStreetViewPanoramaReadyCallback {  // PanoramaReadyCallback to use StreetViewPanorama.
+    private static final LatLng UIT_TIME_SQUARE = new LatLng(10.87007575745032, 106.80306452005529); // sample input.
+    private StreetViewPanorama mStreetViewPanorama; // the object that handle panorama preview.
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        SupportStreetViewPanoramaFragment panoramaFragment =
+                (SupportStreetViewPanoramaFragment) getChildFragmentManager()
+                        .findFragmentById(R.id.streetviewpanorama);
+        panoramaFragment.getStreetViewPanoramaAsync(this); // call this to use the fragment.
+    }
+    /**
+     * after panorama get ready, you can declare the position.
+     */
+    @Override
+    public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
+        mStreetViewPanorama = streetViewPanorama;
+        mStreetViewPanorama.setPosition(UIT_TIME_SQUARE); // where the street view will be shown.
+        /** you can control the inputs into street view */
+        mStreetViewPanorama.setUserNavigationEnabled(true);
+        mStreetViewPanorama.setPanningGesturesEnabled(true);
+        mStreetViewPanorama.setZoomGesturesEnabled(true);
     }
 }
