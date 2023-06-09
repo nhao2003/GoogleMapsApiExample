@@ -2,6 +2,8 @@ package com.example.googlemapsapiexample.Fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -22,8 +24,8 @@ import android.widget.Toast;
 
 import com.directions.route.Route;
 import com.directions.route.RouteException;
-import com.example.googlemapsapiexample.Models.DirectionResponses;
 import com.example.googlemapsapiexample.R;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,34 +33,20 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.maps.android.PolyUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 import com.directions.route.AbstractRouting;
-
-import com.directions.route.Route;
-import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 
 public class MapsFragment extends Fragment implements RoutingListener{
-
     GoogleMap map;
     private FusedLocationProviderClient fusedLocationClient;
     private SupportMapFragment mapFragment;
@@ -70,6 +58,11 @@ public class MapsFragment extends Fragment implements RoutingListener{
     private final static int LOCATION_REQUEST_CODE = 44;
     //polyline object
     private List<Polyline> polylines=null;
+    private FloatingActionButton btnNormal;
+    private FloatingActionButton btnStatellite;
+    private FloatingActionButton btnHybrid;
+    private FloatingActionButton btnTerrain;
+    private FloatingActionButton btnNone;
 
 
     @Nullable
@@ -88,6 +81,27 @@ public class MapsFragment extends Fragment implements RoutingListener{
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        // doi type map
+        btnNormal = view.findViewById(R.id.fbtn_normal);
+        btnNormal.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        });
+        btnStatellite = view.findViewById(R.id.fbtn_satellite);
+        btnStatellite.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        });
+        btnHybrid = view.findViewById(R.id.fbtn_hybrid);
+        btnHybrid.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        });
+        btnTerrain = view.findViewById(R.id.fbtn_terrain);
+        btnTerrain.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        });
+        btnNone = view.findViewById(R.id.fbtn_none);
+        btnNone.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_NONE);
+        });
     }
 
     boolean isPermissionGranted() {
