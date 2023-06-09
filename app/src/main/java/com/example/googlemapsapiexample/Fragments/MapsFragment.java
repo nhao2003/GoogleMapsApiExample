@@ -91,26 +91,7 @@ public class MapsFragment extends Fragment implements RoutingListener{
             mapFragment.getMapAsync(callback);
         }
         // change type map
-        btnNormal = view.findViewById(R.id.fbtn_normal);
-        btnNormal.setOnClickListener(v -> {
-            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        });
-        btnStatellite = view.findViewById(R.id.fbtn_satellite);
-        btnStatellite.setOnClickListener(v -> {
-            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        });
-        btnHybrid = view.findViewById(R.id.fbtn_hybrid);
-        btnHybrid.setOnClickListener(v -> {
-            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        });
-        btnTerrain = view.findViewById(R.id.fbtn_terrain);
-        btnTerrain.setOnClickListener(v -> {
-            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        });
-        btnNone = view.findViewById(R.id.fbtn_none);
-        btnNone.setOnClickListener(v -> {
-            map.setMapType(GoogleMap.MAP_TYPE_NONE);
-        });
+        onHandleChangeTypeMap();
 
         // btn find route
         fabRoute = view.findViewById(R.id.fab_route);
@@ -277,6 +258,29 @@ public class MapsFragment extends Fragment implements RoutingListener{
         Findroutes(currentPosition,end);
     }
 
+    private void onHandleChangeTypeMap() {
+        // change type map
+        btnNormal = getActivity().findViewById(R.id.fbtn_normal);
+        btnNormal.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        });
+        btnStatellite = getActivity().findViewById(R.id.fbtn_satellite);
+        btnStatellite.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        });
+        btnHybrid = getActivity().findViewById(R.id.fbtn_hybrid);
+        btnHybrid.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        });
+        btnTerrain = getActivity().findViewById(R.id.fbtn_terrain);
+        btnTerrain.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        });
+        btnNone = getActivity().findViewById(R.id.fbtn_none);
+        btnNone.setOnClickListener(v -> {
+            map.setMapType(GoogleMap.MAP_TYPE_NONE);
+        });
+    }
 
 
     private void onHandleSearch() {
@@ -293,18 +297,20 @@ public class MapsFragment extends Fragment implements RoutingListener{
 
                     try {
                         addresses = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        ShowToast(e.getMessage());
+
+                        if(addresses != null){
+                            Address address = addresses.get(0);
+                            end = new LatLng(address.getLatitude(), address.getLongitude());
+                            // add this marker to map
+                            map.clear();
+                            markerEnd = new MarkerOptions().position(end).title(location);
+
+                            map.addMarker(markerEnd);
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 19));
+                        }
+                    } catch (Exception e) {
+                        ShowToast("Không tìm ra địa điểm: " + e.getMessage());
                     }
-
-                    Address address = addresses.get(0);
-                    end = new LatLng(address.getLatitude(), address.getLongitude());
-                    // add this marker to map
-                    map.clear();
-                    markerEnd = new MarkerOptions().position(end).title(location);
-
-                    map.addMarker(markerEnd);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 19));
                 } else {
                     ShowToast("Vui lòng nhập gì đó");
                 }
