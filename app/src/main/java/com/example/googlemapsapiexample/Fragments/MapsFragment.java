@@ -5,8 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.directions.route.Route;
@@ -45,6 +47,7 @@ import java.util.List;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MapsFragment extends Fragment implements RoutingListener{
     GoogleMap map;
@@ -64,6 +67,8 @@ public class MapsFragment extends Fragment implements RoutingListener{
     private FloatingActionButton btnTerrain;
     private FloatingActionButton btnNone;
 
+    private com.google.android.material.floatingactionbutton.FloatingActionButton fabRoute;
+
 
     @Nullable
     @Override
@@ -81,7 +86,7 @@ public class MapsFragment extends Fragment implements RoutingListener{
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-        // doi type map
+        // change type map
         btnNormal = view.findViewById(R.id.fbtn_normal);
         btnNormal.setOnClickListener(v -> {
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -101,6 +106,16 @@ public class MapsFragment extends Fragment implements RoutingListener{
         btnNone = view.findViewById(R.id.fbtn_none);
         btnNone.setOnClickListener(v -> {
             map.setMapType(GoogleMap.MAP_TYPE_NONE);
+        });
+
+        // btn find route
+        fabRoute = view.findViewById(R.id.fab_route);
+        fabRoute.setOnClickListener(v -> {
+            // tim duong di giua hai diem
+            //start route finding
+            if(end != null){
+                Findroutes(currentPosition,end);
+            }
         });
     }
 
@@ -146,14 +161,11 @@ public class MapsFragment extends Fragment implements RoutingListener{
 
                         // lay thong tin tai diem do
                         ArrayList<Address> addresses = (ArrayList<Address>)geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                        Toast.makeText(getContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_LONG).show();
+                        ShowSnackbar(addresses.get(0).getAddressLine(0)); // show info address
                         markerEnd = new MarkerOptions().position(latLng).title(addresses.get(0).getAddressLine(0));
 
                         map.addMarker(markerEnd);
 
-                        // tim duong di giua hai diem
-                        //start route finding
-                        Findroutes(currentPosition,end);
                     } catch (IOException e){
                         e.printStackTrace();
                     }
@@ -257,5 +269,13 @@ public class MapsFragment extends Fragment implements RoutingListener{
 
     public void ShowToast(String value) {
         Toast.makeText(getContext(), value, Toast.LENGTH_SHORT).show();
+    }
+    public void ShowSnackbar(String value) {
+        RelativeLayout layout = getView().findViewById(R.id.base_layout);
+        Snackbar snackbar = Snackbar.make(layout, value, Snackbar.LENGTH_LONG)
+                            .setBackgroundTint(ContextCompat.getColor(getContext(),R.color.white))
+                            .setTextColor(ContextCompat.getColor(getContext(),R.color.black));
+
+        snackbar.show();
     }
 }

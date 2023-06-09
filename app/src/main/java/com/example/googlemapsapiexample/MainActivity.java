@@ -13,15 +13,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity{
 
-    Home home = new Home();
-    MapsFragment mapsFragment = new MapsFragment();
-    Routing routing = new Routing();
-    Tracking tracking = new Tracking();
+    Home home;
+    MapsFragment mapsFragment;
+    Routing routing;
+    Tracking tracking;
     BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        home = new Home();
+        mapsFragment = new MapsFragment();
+        routing = new Routing();
+        tracking = new Tracking();
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -29,30 +33,40 @@ public class MainActivity extends AppCompatActivity{
                 case R.id.item_fragment_1:
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.flFragment, home)
+                            .replace(R.id.flFragment, mapsFragment)
                             .commit();
                     break;
                 case R.id.item_fragment_2:
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.flFragment, routing)
+                            .replace(R.id.flFragment, tracking)
                             .commit();
                     break;
                 case R.id.item_fragment_3:
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.flFragment, tracking)
+                            .replace(R.id.flFragment, routing)
                             .commit();
                     break;
                 case R.id.item_fragment_4:
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.flFragment, mapsFragment)
+                            .replace(R.id.flFragment, home)
                             .commit();
                     break;
             }
             return true;
         });
+        // init first fragment
+        if (savedInstanceState == null) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("some_int", 0);
+
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.flFragment, MapsFragment.class, bundle)
+                    .commit();
+        }
     }
 
 
