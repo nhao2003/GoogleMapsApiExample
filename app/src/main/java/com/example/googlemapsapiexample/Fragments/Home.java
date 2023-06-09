@@ -58,7 +58,10 @@ public class Home extends Fragment implements
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
         mStreetViewPanorama = streetViewPanorama;
-        mStreetViewPanorama.setPosition(UIT_TIME_SQUARE); // where the street view will be shown.
+        if(MapsFragment.end == null){
+            MapsFragment.end = UIT_TIME_SQUARE;
+        }
+        mStreetViewPanorama.setPosition(MapsFragment.end); // where the street view will be shown.
         /** you can control the inputs into street view */
         mStreetViewPanorama.setUserNavigationEnabled(true);
         mStreetViewPanorama.setPanningGesturesEnabled(true);

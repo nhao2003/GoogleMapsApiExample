@@ -55,7 +55,7 @@ public class MapsFragment extends Fragment implements RoutingListener{
     private FusedLocationProviderClient fusedLocationClient;
     private SupportMapFragment mapFragment;
     private LatLng currentPosition;
-    private LatLng end = null;
+    public static LatLng end = null;
 
     MarkerOptions markerEnd;
     //to get location permissions.
@@ -175,7 +175,7 @@ public class MapsFragment extends Fragment implements RoutingListener{
                         // init lat lng
                         currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
                         // create marker
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15));
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15));
                         map.getUiSettings().setZoomControlsEnabled(true);
                         map.getUiSettings().setMapToolbarEnabled(true);
                         map.getUiSettings().setMyLocationButtonEnabled(true);
