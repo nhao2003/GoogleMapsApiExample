@@ -15,6 +15,18 @@
         tools:context=".Fragments.MapsFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
+    <SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:queryHint="Thử tìm trường Công nghệ thông tin"
+        android:iconifiedByDefault="false"
+        android:elevation="5dp"
+        android:queryBackground="@android:color/transparent"
+        android:background="@drawable/bg_search_view"
+        android:searchIcon="@drawable/ic_ggmap"/>
+
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu"
         android:layout_width="wrap_content"

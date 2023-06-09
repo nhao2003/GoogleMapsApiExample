@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,13 +62,16 @@ public class MapsFragment extends Fragment implements RoutingListener{
     private final static int LOCATION_REQUEST_CODE = 44;
     //polyline object
     private List<Polyline> polylines=null;
+    // btn change background
     private FloatingActionButton btnNormal;
     private FloatingActionButton btnStatellite;
     private FloatingActionButton btnHybrid;
     private FloatingActionButton btnTerrain;
     private FloatingActionButton btnNone;
-
+    // btn find route
     private com.google.android.material.floatingactionbutton.FloatingActionButton fabRoute;
+    // search
+    private SearchView mSearchView;
 
 
     @Nullable
@@ -117,7 +121,11 @@ public class MapsFragment extends Fragment implements RoutingListener{
                 Findroutes(currentPosition,end);
             }
         });
+
+        // search
+        onHandleSearch();
     }
+
 
     boolean isPermissionGranted() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -139,6 +147,7 @@ public class MapsFragment extends Fragment implements RoutingListener{
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
+            map.setPadding(0, 120, 0, 0);
             // lay vi tri hien tai
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
             if(isPermissionGranted()){
@@ -188,6 +197,7 @@ public class MapsFragment extends Fragment implements RoutingListener{
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15));
                         map.getUiSettings().setZoomControlsEnabled(true);
                         map.getUiSettings().setMapToolbarEnabled(true);
+                        map.getUiSettings().setMyLocationButtonEnabled(true);
                         map.setMyLocationEnabled(true);
                         map.setBuildingsEnabled(true);
                     }
@@ -265,6 +275,48 @@ public class MapsFragment extends Fragment implements RoutingListener{
     @Override
     public void onRoutingCancelled() {
         Findroutes(currentPosition,end);
+    }
+
+
+
+    private void onHandleSearch() {
+        mSearchView = getActivity().findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                String location = mSearchView.getQuery().toString();
+                List<Address> addresses = null;
+
+                if(location != null) {
+                    Geocoder geocoder = new Geocoder(getContext());
+
+                    try {
+                        addresses = geocoder.getFromLocationName(location, 1);
+                    } catch (IOException e) {
+                        ShowToast(e.getMessage());
+                    }
+
+                    Address address = addresses.get(0);
+                    end = new LatLng(address.getLatitude(), address.getLongitude());
+                    // add this marker to map
+                    map.clear();
+                    markerEnd = new MarkerOptions().position(end).title(location);
+
+                    map.addMarker(markerEnd);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 19));
+                } else {
+                    ShowToast("Vui lòng nhập gì đó");
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     public void ShowToast(String value) {
