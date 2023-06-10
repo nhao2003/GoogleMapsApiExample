@@ -6,13 +6,13 @@
     android:id="@+id/base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Routing">
+    tools:context=".Fragments.StaticMapView">
 
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        tools:context=".Fragments.MapsFragment"
+        tools:context=".Fragments.Home"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
     <SearchView

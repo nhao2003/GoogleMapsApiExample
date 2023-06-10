@@ -10,8 +10,8 @@
         android:icon="@drawable/ic_run"/>
     <item
         android:id="@+id/item_fragment_3"
-        android:title="Routing"
-        android:icon="@drawable/ic_route"/>
+        android:title="Static Map"
+        android:icon="@drawable/ic_map"/>
     <item
         android:id="@+id/item_fragment_4"
         android:title="Street view"

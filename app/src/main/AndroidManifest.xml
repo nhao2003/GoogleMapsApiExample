@@ -14,7 +14,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.GoogleMapsApiExample"
             tools:targetApi="31">
-
+        <activity
+                android:name=".MapPicker"
+                android:exported="false"/>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
