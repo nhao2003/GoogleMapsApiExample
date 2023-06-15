@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StaticMapView extends Fragment {
     private ImageView imageView;
@@ -47,7 +48,7 @@ public class StaticMapView extends Fragment {
                     int height = imageView.getHeight();
                     int width = imageView.getWidth();
 
-                    Geocoder geocoder = new Geocoder(getContext());
+                    Geocoder geocoder = new Geocoder(requireContext());
                     ArrayList<Address> addresses = null;
 
                     try {
@@ -91,10 +92,10 @@ public class StaticMapView extends Fragment {
         locationTextView = view.findViewById(R.id.tv_location);
         pickLocationButton = view.findViewById(R.id.btn_pick);
         mapTypeSpinner = view.findViewById(R.id.mapTypesSpin);
-        ArrayAdapter<String> mapTypeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, MAP_TYPES);
+        ArrayAdapter<String> mapTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, MAP_TYPES);
         mapTypeSpinner.setAdapter(mapTypeAdapter);
         zoomSpinner = view.findViewById(R.id.zoomSpin);
-        ArrayAdapter<String> zoomAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, ZOOM_LEVELS);
+        ArrayAdapter<String> zoomAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, ZOOM_LEVELS);
         zoomSpinner.setAdapter(zoomAdapter);
         zoomSpinner.setSelection(14);
         pickLocationButton.setOnClickListener(v -> {
